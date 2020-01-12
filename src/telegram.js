@@ -7,8 +7,7 @@ class TelegramApi {
         console.log("Request to api: " + method);
         axios.post(url, data)
         .then((res) => {
-            console.log(`Status: ${res.status}`)
-            console.log(res.data)
+            console.log(`Status: ${res.status}`);
             if(callback) {
                 callback(res.data);
             }

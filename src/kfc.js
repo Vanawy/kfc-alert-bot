@@ -28,7 +28,7 @@ class Kfc {
             let info = {};
             info.image = this.getPromoImageSrc(html);
             info.text = this.getPromoText(html);
-            info.id = parseInt(url.split("/").pop());
+            info.text += "\n" + this.getPromoLink(url);
             return info;
         });
     }
@@ -50,6 +50,10 @@ class Kfc {
         text = text.replace(/ {2,}/, " ");
         text = text.replace(/^\s+/mg, "");
         return text;
+    }
+
+    getPromoLink(url){
+        return `<a href="${url}">KFC.by</a>`
     }
 }
 

@@ -2,11 +2,13 @@ require('custom-env').env()
 const telegram = require('./telegram')
 const kfc = require('./kfc');
 const fs = require('fs');
-const DATA_FILENAME = '../ids.data';
+const path = require('path');
+const DATA_FILENAME = path.dirname(require.main.filename) + '\\..\\ids.data';
+console.log(DATA_FILENAME);
 
 let ids = [];
 if(fs.existsSync(DATA_FILENAME)){
-    ids = fs.readFileSync(DATA_FILENAME, "utf8").split("\r\n");
+    ids = fs.readFileSync(DATA_FILENAME, "utf8").split(",");
 }else{
     fs.writeFileSync(DATA_FILENAME, "");
 }
@@ -18,13 +20,14 @@ kfc.getPromoUrls()
 })
 
 function notify(url) {
-    kfc.getPromoInfo(url)
-    .then(function(info){
-        console.log(info);
-        // telegram.broadcastMessage(info.image, info.text);
-    });
+    const id = url.split("/").pop();
+    if(ids.indexOf(id) == -1){
+        kfc.getPromoInfo(url)
+        .then(function(info){
+            telegram.broadcastMessage(info.image, info.text);
+        });
+        fs.appendFile(DATA_FILENAME, id + ",", 'utf8', (err) => {
+            if (err) throw err;
+        });
+    }
 }
-
-// api.makeRequest("getUpdates", null, (data) => { console.log(data.result[1].channel_post); });
-// api.broadcastMessage("test");
-// api.sendMessage("test");
