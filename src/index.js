@@ -1,33 +1,44 @@
-require('custom-env').env() 
+require('custom-env').env()
 const telegram = require('./telegram')
 const kfc = require('./kfc');
 const fs = require('fs');
 const path = require('path');
-const DATA_FILENAME = path.dirname(require.main.filename) + '\\..\\ids.data';
-console.log(DATA_FILENAME);
+const DATA_FILENAME = path.dirname(require.main.filename) + '\/..\/ids.data';
 
 let ids = [];
-if(fs.existsSync(DATA_FILENAME)){
+if (fs.existsSync(DATA_FILENAME)) {
     ids = fs.readFileSync(DATA_FILENAME, "utf8").split(",");
-}else{
+} else {
     fs.writeFileSync(DATA_FILENAME, "");
 }
-kfc.getPromoUrls()
-.then(urls => { 
-    urls.forEach(url => {
-        notify(url);
-    });
-})
 
-function notify(url) {
-    const id = url.split("/").pop();
-    if(ids.indexOf(id) == -1){
-        kfc.getPromoInfo(url)
-        .then(function(info){
-            telegram.broadcastMessage(info.image, info.text);
-        });
-        fs.appendFile(DATA_FILENAME, id + ",", 'utf8', (err) => {
-            if (err) throw err;
-        });
+const main = () => {
+    kfc.getPromoUrls()
+        .then(promos => {
+            promos.forEach(promo_url => {
+                notify(promo_url);
+            });
+        })
+        .catch(err => console.error(err));
+};
+
+main();
+
+const interval = 60 * 60 * 1000;
+setInterval(main, interval);
+
+function notify(promo_url) {
+    const id = promo_url.split("/").pop();
+    if (ids.indexOf(id) == -1) {
+        kfc.getPromoInfo(promo_url)
+            .then(function(info) {
+                telegram.broadcastMessage(info.image, info.text, _ => {
+                    fs.appendFile(DATA_FILENAME, id + ",", 'utf8', (err) => {
+                        if (err) throw err;
+                    });
+                    ids.push(id);
+                })
+            })
+            .catch(err => console.error(err));
     }
 }
