@@ -12,12 +12,20 @@ if (fs.existsSync(DATA_FILENAME)) {
     fs.writeFileSync(DATA_FILENAME, "");
 }
 
+let queue = [];
+
 const main = () => {
     kfc.getPromoUrls()
-        .then(promos => {
-            promos.forEach(promo_url => {
-                notify(promo_url);
+        .then(promo_urls => {
+            const new_promos_urls = promo_urls.filter(promo_url => {
+                const id = promo_url.split("/").pop();
+                return ids.indexOf(id) == -1 && queue.indexOf(id) == -1
             });
+            console.log(`There is ${new_promos_urls.length} new promo(s)`);
+            queue.push(...new_promos_urls);
+            while (queue.length != 0) {
+                notify(queue.shift());
+            }
         })
         .catch(err => console.error(err));
 };
@@ -37,8 +45,14 @@ function notify(promo_url) {
                         if (err) throw err;
                     });
                     ids.push(id);
+                    console.log(`${id} - success`);
                 })
             })
-            .catch(err => console.error(err));
+            .catch(
+                err => {
+                    queue.push(promo_url);
+                    console.error(err);
+                }
+            );
     }
 }
