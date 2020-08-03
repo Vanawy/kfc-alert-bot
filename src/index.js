@@ -1,9 +1,12 @@
-require('custom-env').env()
-const telegram = require('./telegram')
+require('dotenv').config();
+const TelegramApi = require('./telegram');
 const kfc = require('./kfc');
 const fs = require('fs');
 const path = require('path');
 const DATA_FILENAME = path.dirname(require.main.filename) + '\/..\/ids.data';
+
+const subscribers = process.env.BOT_SUBSCRIBERS.split(',');
+const telegram = new TelegramApi(process.env.BOT_TOKEN, subscribers);
 
 let ids = [];
 if (fs.existsSync(DATA_FILENAME)) {
@@ -32,7 +35,7 @@ const main = () => {
 
 main();
 
-const interval = 60 * 60 * 1000;
+const interval = (process.env.CHECK_INTERVAL || 60) * 60 * 1000;
 setInterval(main, interval);
 
 function notify(promo_url) {
@@ -40,13 +43,13 @@ function notify(promo_url) {
     if (ids.indexOf(id) == -1) {
         kfc.getPromoInfo(promo_url)
             .then(function(info) {
-                telegram.broadcastMessage(info.image, info.text, _ => {
-                    fs.appendFile(DATA_FILENAME, id + ",", 'utf8', (err) => {
-                        if (err) throw err;
-                    });
-                    ids.push(id);
-                    console.log(`${id} - success`);
-                })
+                return telegram.broadcastMessage(info.image, info.text);
+            }).then(_ => {
+                fs.appendFile(DATA_FILENAME, id + ",", 'utf8', (err) => {
+                    if (err) throw err;
+                });
+                ids.push(id);
+                console.log(`${id} - success`);
             })
             .catch(
                 err => {

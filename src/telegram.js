@@ -1,32 +1,59 @@
 const axios = require('axios');
 
 class TelegramApi {
-    token = process.env.BOT_TOKEN
-    makeRequest(method, data, callback = null) {
+    constructor(token, subscribers) {
+        this.token = token;
+        this.subscribers = subscribers;
+    }
+    /**
+     * Make request to telegram api
+     * @param {string} method Telegram API method name
+     * @param {object} data Telegram API method parameters
+     * @returns {Promise} Promise with Telegram API response data
+     */
+    makeRequest(method, data) {
         const url = `https://api.telegram.org/bot${this.token}/${method}`;
-        console.log("Request to api: " + method);
-        axios.post(url, data)
+        process.stdout.write(`Request to api: ${method} - `);
+        return axios.post(url, data)
             .then((res) => {
                 console.log(`Status: ${res.status}`);
-                if (callback) {
-                    callback(res.data);
-                }
-            })
-            .catch((error) => {
-                console.error(error)
+                return res.data;
             });
     }
-    broadcastMessage(photo, text, callback) {
-        const subscribers = process.env.BOT_SUBSCRIBERS.split(",");
-        for (let subscriber of subscribers) {
+    /**
+     * 
+     * @param {object} data 
+     * @returns {Promise} Promise with Telegram API response data
+     */
+    getUpdates(data = {}){
+        const method = 'getUpdates';
+        return this.makeRequest(method, data);
+    }
+
+    /**
+     * 
+     * @param {string} photo Photo url or Telegram file_id
+     * @param {string} text Post caption/
+     * @returns {Promise<object[]>}
+     */
+    broadcastMessage(photo, text) {
+        const method = 'sendPhoto';
+        let responses = [];
+        for (let subscriber of this.subscribers) {
             const data = {
                 chat_id: subscriber,
                 photo: photo,
-                parse_mode: "HTML",
+                parse_mode: 'HTML',
                 caption: text,
             }
-            this.makeRequest("sendPhoto", data, callback);
+            const response = this.makeRequest(method, data)
+            .catch(err => {
+                console.error(err);
+                return {};
+            });
+            responses.push(response);
         }
+        return Promise.all(responses);
     }
 }
-module.exports = new TelegramApi();
+module.exports = TelegramApi;
