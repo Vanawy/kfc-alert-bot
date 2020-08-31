@@ -13,6 +13,8 @@
         "axios": "^0.19.1",
         "canvas": "^2.6.1",
         "dotenv": "^8.2.0",
-        "striptags": "^3.1.1"
+        "form-data": "^3.0.0",
+        "striptags": "^3.1.1",
+        "unique-filename": "^1.1.1"
     }
 }

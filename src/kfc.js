@@ -3,6 +3,7 @@ const striptags = require('striptags');
 
 const kfc_logo = 'https://www.kfc.by/assets/img/desktop/logo.png';
 
+// TODO: refactor with cheerio
 class Kfc {
     PROMO_PAGE = "https://www.kfc.by/promo";
     async getPromoUrls() {
@@ -36,6 +37,7 @@ class Kfc {
                     info.image = kfc_logo;
                     info.file = this.getCouponsFile(html);
                     info.text = this.getCouponsText(html);
+                    info.photos = this.getCouponsPhotos(html);
                     info.text += "\n" + this.getCouponsLink(info.file, url);
                 }
                 info.text += "\n" + this.getPromoLink(url);
@@ -80,6 +82,15 @@ class Kfc {
         let text = html.match(pattern)[1];
         text = this.fixText(text);
         return text;
+    }
+
+    getCouponsPhotos(html) {
+        const pattern = /class="coupon-list__item"><img src="([\S\s]+?)"/ig;
+        let photos = [];
+        for(const result of html.matchAll(pattern)) {
+            photos.push(result[1])
+        }
+        return photos;
     }
 
     getPromoLink(url) {
