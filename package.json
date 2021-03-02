@@ -1,10 +1,11 @@
 {
     "name": "kfc",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "description": "",
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",
+        "coupons": "node src/parse-coupons.js",
         "test": "node src/test.js"
     },
     "author": "Vanawy <vanawy.net>",

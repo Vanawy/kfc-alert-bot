@@ -73,7 +73,7 @@ class Kfc {
 
     getCouponsFile(html) {
         const pattern = /<a href="([^\"]+)" class="breakfast-download">/i;
-        let file = html.match(pattern)[1];
+        let file = html.match(pattern) ? html.match(pattern)[1] : null;
         return file;
     }
 
@@ -98,6 +98,9 @@ class Kfc {
     }
 
     getCouponsLink(file, url) {
+        if (file == null) {
+            return '';
+        }
         return `Скачать <a href="${file}">купоны PDF</a> или смотреть <a href="${url}">на сайте</a>`;
     }
 
