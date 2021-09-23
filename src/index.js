@@ -34,9 +34,10 @@ const main = () => {
 };
 
 main();
-
-const interval = (process.env.CHECK_INTERVAL || 60) * 60 * 1000;
+const check_interval = parseInt(process.env.CHECK_INTERVAL);
+const interval = (check_interval || 60) * 60 * 1000;
 setInterval(main, interval);
+console.log(`Bot started with interval of ${interval / 60 / 1000} minutes`);
 
 function notify(promo_url) {
     const id = promo_url.split("/").pop();
