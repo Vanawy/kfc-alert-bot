@@ -3,3 +3,14 @@
 
 only for https://kfc.by
 
+This bot parses kfc.by/promo page and for each new promo creates message in [Telegram Channel](https://t.me/kfcby)
+
+# Installation
+
+```
+git clone https://github.com/Vanawy/kfc-alert-bot
+cd kfc-alert-bot
+npm install
+cp example.env .env
+nano .env
+```
