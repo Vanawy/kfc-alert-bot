@@ -9,7 +9,7 @@
         "test": "node src/test.js"
     },
     "author": "Vanawy <vanawy.net>",
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "axios": "^0.21.1",
         "canvas": "^2.6.1",
