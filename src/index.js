@@ -1,4 +1,13 @@
 require('dotenv').config();
+
+// FIX 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' issue
+const axios = require('axios');
+let https = require('https');
+let agent = new https.Agent({
+    rejectUnauthorized: false,
+});
+axios.defaults.httpsAgent = agent;
+
 const TelegramApi = require('./telegram');
 const kfc = require('./kfc');
 const fs = require('fs');

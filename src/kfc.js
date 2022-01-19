@@ -1,16 +1,6 @@
 const axios = require('axios');
 const striptags = require('striptags');
 
-
-// FIX 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' issue
-let https = require('https');
-let agent = new https.Agent({
-    host: 'www.kfc.by',
-    port: '443',
-    rejectUnauthorized: false,
-});
-axios.defaults.httpsAgent = agent;
-
 const kfc_logo = 'https://www.kfc.by/assets/img/desktop/logo.png';
 
 // TODO: refactor with cheerio
