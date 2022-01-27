@@ -20,7 +20,6 @@ const telegram = new TelegramApi(process.env.BOT_TOKEN, subscribers);
 let ids = [];
 if (fs.existsSync(DATA_FILENAME)) {
     ids = fs.readFileSync(DATA_FILENAME, "utf8").split(",");
-    console.log(ids);
 } else {
     fs.writeFileSync(DATA_FILENAME, "");
 }
