@@ -54,7 +54,7 @@ function notify(promo_url) {
         kfc.getPromoInfo(promo_url)
             .then(function(info) {
                 return telegram.broadcastMessage(info.image, info.text);
-            }).then(_ => {
+            }).then(() => {
                 fs.appendFile(DATA_FILENAME, id + ",", 'utf8', (err) => {
                     if (err) throw err;
                 });
