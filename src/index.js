@@ -12,7 +12,7 @@ const TelegramApi = require('./telegram');
 const kfc = require('./kfc');
 const fs = require('fs');
 const path = require('path');
-const DATA_FILENAME = path.dirname(require.main.filename) + '\/..\/ids.data';
+const DATA_FILENAME = path.dirname(require.main.filename) + '/../ids.data';
 
 const subscribers = process.env.BOT_SUBSCRIBERS.split(',');
 const telegram = new TelegramApi(process.env.BOT_TOKEN, subscribers);
@@ -20,6 +20,7 @@ const telegram = new TelegramApi(process.env.BOT_TOKEN, subscribers);
 let ids = [];
 if (fs.existsSync(DATA_FILENAME)) {
     ids = fs.readFileSync(DATA_FILENAME, "utf8").split(",");
+    console.log(ids);
 } else {
     fs.writeFileSync(DATA_FILENAME, "");
 }
