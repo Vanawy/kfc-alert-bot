@@ -7,12 +7,15 @@ let agent = new https.Agent({
     rejectUnauthorized: false,
 });
 axios.defaults.httpsAgent = agent;
+// END OF FIX
 
 const TelegramApi = require('./telegram');
 const kfc = require('./kfc');
 const fs = require('fs');
 const path = require('path');
 const DATA_FILENAME = path.dirname(require.main.filename) + '\/..\/ids.data';
+
+const storage = require('./storage');
 
 const subscribers = process.env.BOT_SUBSCRIBERS.split(',');
 const telegram = new TelegramApi(process.env.BOT_TOKEN, subscribers);

@@ -1,0 +1,10 @@
+{
+  "development": {
+    "database": "kfcbot_dev",
+    "dialect": "sqlite"
+  },
+  "production": {
+    "database": "kfcbot",
+    "dialect": "sqlite"
+  }
+}
