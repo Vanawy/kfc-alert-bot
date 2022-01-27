@@ -1,4 +1,12 @@
+// FIX 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' issue
 const axios = require('axios');
+let https = require('https');
+let agent = new https.Agent({
+    rejectUnauthorized: false,
+});
+axios.defaults.httpsAgent = agent;
+// END OF FIX
+
 const striptags = require('striptags');
 
 const kfc_logo = 'https://www.kfc.by/assets/img/desktop/logo.png';
