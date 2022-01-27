@@ -24,6 +24,6 @@ module.exports = function(images) {
     })
     .then(canvas => {
         const filename = uniqueFilename('/tmp') + '.png';
-        return fs.writeFile(filename, canvas.toBuffer()).then(_ => filename);
+        return fs.writeFile(filename, canvas.toBuffer()).then(() => filename);
     });
 }
